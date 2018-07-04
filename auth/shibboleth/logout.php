@@ -157,7 +157,10 @@ function LogoutNotification($spsessionid) {
 
 function logoutfilesession($spsessionid) {
     global $CFG;
-    $dir = $CFG->dataroot .'/sessions';
+    $dir = $CFG->sessions_file_save_path;
+    if (!$dir) {
+        $dir = $CFG->dataroot .'/sessions';
+    }
     if (is_dir($dir)) {
         if ($dh = opendir($dir)) {
             // Read all session files.
