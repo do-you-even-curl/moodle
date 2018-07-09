@@ -132,19 +132,18 @@ function LogoutNotification($spsessionid) {
     // Delete session of user using $spsessionid.
     // The setting $CFG->session_handler_class may not be set. But if it is,
     // it should override $CFG->dbsessions.
-    if ($sessionclass = $CFG->session_handler_class) {
+    if (!empty($CFG->session_handler_class)) {
+        $sessionclass = $CFG->session_handler_class;
         if (preg_match('/database/i', $sessionclass) === 1) {
             return logoutdbsession($spsessionid);
-        } else if ($sessionclass && preg_match('/file/i', $sessionclass) === 1) {
+        } else if (preg_match('/file/i', $sessionclass) === 1) {
             return logoutfilesession($spsessionid);
-        } else if ($sessionclass && preg_match('/memcached/i', $sessionclass) === 1) {
-            throw new ErrorException('memcached shibboleth logout not implemented');
         } else {
-            throw new ErrorException('cannot logout, unknown session class: ' . $sessionclass);
+            throw new moodle_exception("Shibboleth logout not implemented for '$sessionclass'");
         }
     } else {
         // Session handler class is not specified, check dbsessions instead.
-        if ($CFG->dbsessions == 1) {
+        if (!empty($CFG->dbsessions)) {
             return logoutdbsession($spsessionid);
         }
         // Assume file sessions if dbsessions isn't used.
