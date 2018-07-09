@@ -156,10 +156,13 @@ function LogoutNotification($spsessionid) {
 // Delete session of user using $spsessionid.
 function logoutfilesession($spsessionid) {
     global $CFG;
-    $dir = $CFG->sessions_file_save_path;
-    if (!$dir) {
-        $dir = $CFG->dataroot .'/sessions';
+
+    if (!empty($CFG->session_file_save_path)) {
+        $dir = $CFG->session_file_save_path;
+    } else {
+        $dir = $CFG->dataroot . '/sessions';
     }
+
     if (is_dir($dir)) {
         if ($dh = opendir($dir)) {
             // Read all session files.
