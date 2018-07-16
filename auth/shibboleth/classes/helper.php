@@ -59,7 +59,7 @@ class helper {
                         // Read session file data.
                         $data = file($dir.'/'.$file);
                         if (isset($data[0])) {
-                            $usersession = unserializesession($data[0]);
+                            $usersession = self::unserializesession($data[0]);
                             // Check if we have found session that shall be deleted.
                             if (isset($usersession['SESSION']) && isset($usersession['SESSION']->shibboleth_session_id)) {
                                 // If there is a match, delete file.
@@ -103,5 +103,16 @@ class helper {
                 }
             }
         }
+    }
+
+    // Same function as in adodb, but cannot be used for file session for some reason...
+    private static function unserializesession($serializedstring) {
+        $variables = array();
+        $a = preg_split("/(\w+)\|/", $serializedstring, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $counta = count($a);
+        for ($i = 0; $i < $counta; $i = $i + 2) {
+                $variables[$a[$i]] = unserialize($a[$i + 1]);
+        }
+        return $variables;
     }
 }
