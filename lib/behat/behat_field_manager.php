@@ -75,7 +75,8 @@ class behat_field_manager {
         $fieldnodes = $context->findall_field($label);
 
         if (count($fieldnodes) < $n + 1) {
-            throw new ExpectationException('Unable to find '.($n + 1).'th field with label "'.$label.'". Only '.count($fieldnodes).' fields with that label are in the page.', $context->getSession());
+            throw new ExpectationException('Unable to find '.($n + 1).'th field with label "'.$label.'".'.
+                ' Only '.count($fieldnodes).' fields with that label are in the page.', $context->getSession());
         }
 
         // The behat field manager.
