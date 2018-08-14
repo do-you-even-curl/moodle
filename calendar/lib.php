@@ -2067,32 +2067,27 @@ function calendar_set_filters(array $courseeventsfrom, $ignorefilters = false, s
 
     if (!empty($courseeventsfrom) && (calendar_show_event_type(CALENDAR_EVENT_GROUP, $user) || $ignorefilters)) {
 
-        if (count($courseeventsfrom) == 1) {
-            $course = reset($courseeventsfrom);
-            if (has_any_capability($allgroupscaps, \context_course::instance($course->id))) {
-                $coursegroups = groups_get_all_groups($course->id, 0, 0, 'g.id');
-                $group = array_keys($coursegroups);
+        if (!empty($CFG->calendar_adminseesall) && has_any_capability($allgroupscaps, \context_system::instance())) {
+            $group = true;
+        } else if ($isvaliduser) {
+            $groupids = array();
+            foreach ($courseeventsfrom as $courseid => $course) {
+                // If the user is a manager/editing teacher in there.
+                if (has_any_capability($allgroupscaps, \context_course::instance($course->id))) {
+                    // The current user can see all groups in this course, so show events from all of those.
+                    $coursegroups = groups_get_all_groups($course->id, 0, 0, 'g.id');
+                    $groupids = array_merge($groupids, array_keys($coursegroups));
+                } else if (!empty($user->groupmember[$course->id])) {
+                    // We've already cached the users groups for this course so we can just use that.
+                    $groupids = array_merge($groupids, $user->groupmember[$course->id]);
+                } else if ($course->groupmode != NOGROUPS || !$course->groupmodeforce) {
+                    // If this course has groups, show events from all of those related to the current user.
+                    $coursegroups = groups_get_user_groups($course->id, $user->id);
+                    $groupids = array_merge($groupids, $coursegroups['0']);
+                }
             }
-        }
-        if ($group === false) {
-            if (!empty($CFG->calendar_adminseesall) && has_any_capability($allgroupscaps, \context_system::instance())) {
-                $group = true;
-            } else if ($isvaliduser) {
-                $groupids = array();
-                foreach ($courseeventsfrom as $courseid => $course) {
-                    // If the user is an editing teacher in there.
-                    if (!empty($user->groupmember[$course->id])) {
-                        // We've already cached the users groups for this course so we can just use that.
-                        $groupids = array_merge($groupids, $user->groupmember[$course->id]);
-                    } else if ($course->groupmode != NOGROUPS || !$course->groupmodeforce) {
-                        // If this course has groups, show events from all of those related to the current user.
-                        $coursegroups = groups_get_user_groups($course->id, $user->id);
-                        $groupids = array_merge($groupids, $coursegroups['0']);
-                    }
-                }
-                if (!empty($groupids)) {
-                    $group = $groupids;
-                }
+            if (!empty($groupids)) {
+                $group = $groupids;
             }
         }
     }
