@@ -121,12 +121,16 @@ Feature: Perform basic calendar functionality
     And I am on "Course 1" course homepage
     When I follow "This month"
     And I click on "Really awesome event!" "link"
+    And I should not see "»"
     And I click on "Edit" "button"
     And I set the following fields to these values:
       | Event title | Mediocre event :( |
       | Description | Wait, this event isn't that great. |
+      | Duration in minutes | |
+      | Duration in minutes | 30 |
     And I press "Save"
     Then I should see "Mediocre event"
+    And I should see "»"
 
   @javascript
   Scenario: Module events editing
