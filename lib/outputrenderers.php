@@ -2891,7 +2891,7 @@ EOD;
         }
         $output .= $this->box($message, 'errorbox alert alert-danger', null, array('data-rel' => 'fatalerror'));
 
-        if ($CFG->debugdeveloper) {
+        if (debugging('', DEBUG_DEVELOPER)) {
             if (!empty($debuginfo)) {
                 $debuginfo = s($debuginfo); // removes all nasty JS
                 $debuginfo = str_replace("\n", '<br />', $debuginfo); // keep newlines

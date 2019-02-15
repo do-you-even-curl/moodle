@@ -119,15 +119,9 @@ class moodle_exception extends Exception {
         }
 
         $isinphpunittest = (defined('PHPUNIT_TEST') && PHPUNIT_TEST);
-        $hasdebugdeveloper = (
-            isset($CFG->debugdisplay) &&
-            isset($CFG->debug) &&
-            $CFG->debugdisplay &&
-            $CFG->debug === DEBUG_DEVELOPER
-        );
 
         if ($debuginfo) {
-            if ($isinphpunittest || $hasdebugdeveloper) {
+            if ($isinphpunittest || debugging('', DEBUG_DEVELOPER)) {
                 $message = "$message ($debuginfo)";
             }
         }
