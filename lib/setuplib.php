@@ -124,6 +124,9 @@ class moodle_exception extends Exception {
             isset($CFG->debug) &&
             $CFG->debugdisplay &&
             $CFG->debug === DEBUG_DEVELOPER
+        ) || (
+            isset($CFG->debugdeveloper) &&
+            $CFG->debugdeveloper
         );
 
         if ($debuginfo) {

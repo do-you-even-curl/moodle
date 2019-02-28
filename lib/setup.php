@@ -789,6 +789,13 @@ if (empty($CFG->sessiontimeout)) {
 }
 \core\session\manager::start();
 
+$forcedebug = false;
+if (!empty($CFG->debugusers) && $USER) {
+    $debugusers = explode(',', $CFG->debugusers);
+    $forcedebug = in_array($USER->id, $debugusers);
+}
+$CFG->debugdeveloper = $CFG->debugdeveloper || $forcedebug; // Force debug if current user is on debugusers list.
+
 // Set default content type and encoding, developers are still required to use
 // echo $OUTPUT->header() everywhere, anything that gets set later should override these headers.
 // This is intended to mitigate some security problems.
