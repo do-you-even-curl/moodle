@@ -1244,7 +1244,8 @@ class assign_grading_table extends table_sql implements renderable {
         );
 
         // Everything we need is in the row.
-        $submission = $row;
+        $submission = clone $row;
+        $submission->id = $row->submissionid;
         $flags = $row;
         if ($this->assignment->get_instance()->teamsubmission) {
             // Use the cache for this.
@@ -1314,7 +1315,8 @@ class assign_grading_table extends table_sql implements renderable {
             }
             if ($USER->id != $row->id &&
                     $caneditsubmission &&
-                    !empty($row->status)) {
+                    !empty($row->status) &&
+                    !$this->assignment->submission_empty($submission)) {
                 $urlparams = array('id' => $this->assignment->get_course_module()->id,
                                    'userid' => $row->id,
                                    'action' => 'removesubmissionconfirm',
