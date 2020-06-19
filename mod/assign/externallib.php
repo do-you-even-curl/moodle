@@ -795,7 +795,7 @@ class mod_assign_external extends external_api {
                     );
 
                     if (($assign->get_instance()->teamsubmission
-                        && $assign->can_view_group_submission($submission->groupid))
+                        && $assign->can_view_group_submission($submissionrecord->groupid))
                         || (!$assign->get_instance()->teamsubmission
                         && $assign->can_view_submission($submissionrecord->userid))
                     ) {
