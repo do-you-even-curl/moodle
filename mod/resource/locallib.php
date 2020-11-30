@@ -85,6 +85,7 @@ function resource_display_embed($resource, $cm, $course, $file) {
 
     } else if ($mimetype === 'application/pdf') {
         // PDF document
+        $moodleurl->param('embed', 1);
         $code = resourcelib_embed_pdf($moodleurl->out(), $title, $clicktoopen);
 
     } else if ($mediamanager->can_embed_url($moodleurl, $embedoptions)) {
