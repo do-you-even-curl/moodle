@@ -194,9 +194,17 @@ H5P.XAPIEvent.prototype.setActor = function () {
   if (H5PIntegration.user !== undefined) {
     this.data.statement.actor = {
       'name': H5PIntegration.user.name,
-      'mbox': 'mailto:' + H5PIntegration.user.mail,
       'objectType': 'Agent'
     };
+    if (H5PIntegration.user.mail !== undefined) {
+      this.data.statement.actor.mbox = 'mailto:' + H5PIntegration.user.mail;
+    }
+    if (H5PIntegration.user.id !== undefined) {
+      this.data.statement.actor.account = {
+        'name': H5PIntegration.user.id,
+        'homePage': H5PIntegration.siteUrl
+      }
+    }
   }
   else {
     var uuid;
